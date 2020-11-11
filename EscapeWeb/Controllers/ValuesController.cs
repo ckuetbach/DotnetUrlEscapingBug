@@ -15,8 +15,11 @@ namespace EscapeWeb.Controllers
         [HttpGet]
         public ActionResult<string> Get0(string id)
         {
+            Console.WriteLine( $"id: {id}" );
             var du = Request.GetDisplayUrl();
-            var ab = Request.GetEncodedPathAndQuery();
+            Console.WriteLine( $"display url: {du}");
+            var epq = Request.GetEncodedPathAndQuery();
+            Console.WriteLine( $"encoded url: {epq}");
             return id;
         }
 
@@ -24,8 +27,11 @@ namespace EscapeWeb.Controllers
         [HttpGet("({id})")]
         public ActionResult<string> Get1(string id)
         {
+            Console.WriteLine( $"id: {id}" );
             var du = Request.GetDisplayUrl();
-            var ab = Request.GetEncodedPathAndQuery();
+            Console.WriteLine( $"display url: {du}");
+            var epq = Request.GetEncodedPathAndQuery();
+            Console.WriteLine( $"encoded url: {epq}");
             return id;
         }
 

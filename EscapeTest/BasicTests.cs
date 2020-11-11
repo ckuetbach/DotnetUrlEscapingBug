@@ -30,13 +30,13 @@ namespace EscapeTest
 
             // Act
             var requestUri = url+ "?id=" + HttpUtility.UrlEncode(id);
+            _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
-            var x = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            Assert.Equal(id, x);
+            Assert.Equal(id, reflectedId);
         }
         
         [Theory]
@@ -49,13 +49,13 @@ namespace EscapeTest
 
             // Act
             var requestUri = url+ "/(" + HttpUtility.UrlEncode(id) + ")/";
+            _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
-            var x = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            Assert.Equal(id, x);
+            Assert.Equal(id, reflectedId);
         }
         
         [Theory]
@@ -68,14 +68,11 @@ namespace EscapeTest
 
             // Act
             var requestUri = url+ "/(" + HttpUtility.UrlEncode(id) + ")/";
-            _testOutputHelper.WriteLine(requestUri);
+            _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
-            // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
-            var x = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            Assert.Equal(id, x);
+            var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Assert.Equal(id, reflectedId);
         }
     }
 }
