@@ -16,13 +16,12 @@ All three tests should behave the same.
 This test has no errors, everything works as expected
 
 
-### Get_With_Keys_In_Path
+### Get_With_Keys_In_Path_TestServer
 In this test only the ``a%2Fb`` as id works as expected. 
 The Testserver returns a ``404`` for the id ``a/b``. 
 
 
-
-### Get_With_Running_Web_Project
+### Get_With_Keys_In_Path_Server
 In this test only the ``a%2Fb`` as id works as expected. 
 The Server returns an escaped value, which is strange, because ``a%2fb`` 
 and ``a%252fb`` will return the same value.

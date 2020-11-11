@@ -34,15 +34,15 @@ namespace EscapeTest
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
+            response.EnsureSuccessStatusCode();
             var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
             Assert.Equal(id, reflectedId);
         }
         
         [Theory]
         [InlineData("/api/values", "a/b")]
         [InlineData("/api/values", "a%2Fb")]
-        public async Task Get_With_Keys_In_Path(string url, string id)
+        public async Task Get_With_Keys_In_Path_TestServer(string url, string id)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -53,15 +53,15 @@ namespace EscapeTest
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
+            response.EnsureSuccessStatusCode();
             var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
             Assert.Equal(id, reflectedId);
         }
         
         [Theory]
         [InlineData("http://localhost:5000/api/values", "a/b")]
         [InlineData("http://localhost:5000/api/values", "a%2Fb")]
-        public async Task Get_With_Running_Web_Project(string url, string id)
+        public async Task Get_With_Keys_In_Path_Server(string url, string id)
         {
             // Arrange
             var client = new HttpClient();
@@ -71,6 +71,8 @@ namespace EscapeTest
             _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
+            // Assert
+            response.EnsureSuccessStatusCode();
             var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             Assert.Equal(id, reflectedId);
         }
