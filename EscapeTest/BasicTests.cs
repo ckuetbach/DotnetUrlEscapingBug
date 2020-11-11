@@ -1,7 +1,4 @@
-using System;
-using System.Net;
 using System.Net.Http;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Web;
 using EscapeWeb;
@@ -26,7 +23,7 @@ namespace EscapeTest
         [Theory]
         [InlineData("/api/values", "a/b")]
         [InlineData("/api/values", "a%2Fb")]
-        public async Task Get_0(string url, string id)
+        public async Task Get_With_Keys_In_Query(string url, string id)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -45,7 +42,7 @@ namespace EscapeTest
         [Theory]
         [InlineData("/api/values", "a/b")]
         [InlineData("/api/values", "a%2Fb")]
-        public async Task Get_1(string url, string id)
+        public async Task Get_With_Keys_In_Path(string url, string id)
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -64,11 +61,10 @@ namespace EscapeTest
         [Theory]
         [InlineData("http://localhost:5000/api/values", "a/b")]
         [InlineData("http://localhost:5000/api/values", "a%2Fb")]
-        public async Task Get_2(string url, string id)
+        public async Task Get_With_Running_Web_Project(string url, string id)
         {
             // Arrange
             var client = new HttpClient();
-            
 
             // Act
             var requestUri = url+ "/(" + HttpUtility.UrlEncode(id) + ")/";
