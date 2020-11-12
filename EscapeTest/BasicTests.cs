@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,60 +22,58 @@ namespace EscapeTest
         }
 
         [Theory]
-        [InlineData("/api/values", "a/b")]
-        [InlineData("/api/values", "a%2Fb")]
-        public async Task Get_With_Keys_In_Query(string url, string id)
+        [InlineData("/api/values/?id=a%2Fb", "a/b")]     // Encoded a/b
+        [InlineData("/api/values/?id=a%252Fb", "a%2Fb")] // Double encoded a/b
+        public async Task Get_With_Keys_In_Query(string requestUri, string expectedId)
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
-            var requestUri = url+ "?id=" + HttpUtility.UrlEncode(id);
             _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
             response.EnsureSuccessStatusCode();
             var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            Assert.Equal(id, reflectedId);
+            Assert.Equal(expectedId, reflectedId);
         }
         
         [Theory]
-        [InlineData("/api/values", "a/b")]
-        [InlineData("/api/values", "a%2Fb")]
-        public async Task Get_With_Keys_In_Path_TestServer(string url, string id)
+        [InlineData("/api/values/(a%2Fb)/", "a/b")]     // Encoded a/b
+        [InlineData("/api/values/(a%252Fb)", "a%2Fb")]  // Double encoded a/b
+        public async Task Get_With_Keys_In_Path_TestServer(string requestUri, string expectedId)
         {
             // Arrange
             var client = _factory.CreateClient();
 
             // Act
-            var requestUri = url+ "/(" + HttpUtility.UrlEncode(id) + ")/";
             _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
             response.EnsureSuccessStatusCode();
             var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            Assert.Equal(id, reflectedId);
+            Assert.Equal(expectedId, reflectedId);
         }
         
         [Theory]
-        [InlineData("http://localhost:5000/api/values", "a/b")]
-        [InlineData("http://localhost:5000/api/values", "a%2Fb")]
-        public async Task Get_With_Keys_In_Path_Server(string url, string id)
+        [InlineData("/api/values/(a%2Fb)/", "a/b")]     // Encoded a/b
+        [InlineData("/api/values/(a%252Fb)", "a%2Fb")]  // Double encoded a/b
+        public async Task Get_With_Keys_In_Path_Server(string requestUri, string expectedId)
         {
             // Arrange
-            var client = new HttpClient();
+            var client = new HttpClient{BaseAddress = new Uri("http://localhost:5000/")};
+            
 
             // Act
-            var requestUri = url+ "/(" + HttpUtility.UrlEncode(id) + ")/";
             _testOutputHelper.WriteLine($"requested uri: {requestUri}");
             var response = await client.GetAsync(requestUri).ConfigureAwait(false);
             
             // Assert
             response.EnsureSuccessStatusCode();
             var reflectedId = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            Assert.Equal(id, reflectedId);
+            Assert.Equal(expectedId, reflectedId);
         }
     }
 }
